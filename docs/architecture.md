@@ -1,60 +1,65 @@
-# 系统架构说明（前后端分离）
+# 系统架构说明
 
 ## 1. 总体架构
 
-采用前后端分离架构：
+系统由前端业务门户、后端业务服务、数据存储与可信存证扩展组成：
 
-- **前端（Vue3 + Vite）**：负责查询展示、管理录入交互
-- **后端（Spring Boot + MyBatis）**：负责业务逻辑、数据存储、链式校验
-- **数据库（H2/MySQL）**：存储批次与溯源事件
-- **可信扩展层（模拟上链）**：关键数据哈希存证，预留联盟链接口
-
-### 架构关系
+- **前端门户（Vue3）**：用户登录、业务录入、统计图表、扫码溯源
+- **后端服务（Spring Boot + MyBatis）**：认证授权、业务流程、统计接口、链式校验
+- **数据库（H2 / MySQL）**：存储用户、产品、批次、业务记录、溯源链
+- **可信扩展层**：关键哈希存证，预留联盟链接口
 
 ```text
-Vue SPA (5173)
-   │  HTTP / JSON
+Web Portal
+   │ HTTP/JSON
    ▼
-Spring Boot API (8080)
+Spring Boot API
    │
-   ├── MyBatis → H2/MySQL
-   └── BlockchainEvidenceService（模拟上链，可替换 Fabric）
+   ├── MyBatis -> H2/MySQL
+   └── BlockchainEvidenceService (可替换为真实链)
 ```
 
-## 2. 角色与职责
+## 2. 角色与权限模型
 
-- **生产者**：创建批次，记录种植环节
-- **加工/物流企业**：补充加工与运输信息
-- **监管部门**：查看全链路与检测记录
-- **消费者**：通过二维码查询来源与流转信息
+- **管理员（ADMIN）**：全量管理（用户、产品、批次、记录）
+- **企业（ENTERPRISE）**：维护产品、批次及业务记录
+- **普通用户（USER）**：查询统计与溯源信息
 
-## 3. 核心设计
+认证方式：`/api/auth/login` 获取 `Bearer token`，后端按角色校验写入权限。
 
-### 3.1 数据模型
-- `product_batch`：批次基础信息
-- `trace_event`：生命周期事件信息
+## 3. 业务域模型
 
-### 3.2 防篡改机制
-每条 `trace_event` 都保存：
-- `prev_hash`：前一条事件哈希
-- `block_hash`：当前事件哈希（SHA-256）
+### 3.1 主体数据
+- `sys_user`：用户与角色
+- `product`：产品台账
+- `product_batch`：批次台账（二维码核心索引）
 
-形成单批次内部不可逆链路，支持完整性校验。
+### 3.2 过程数据
+- `production_record`：生产记录（种植信息 + 农资）
+- `processing_record`：加工记录
+- `quality_record`：质检记录（PASS/FAIL）
+- `warehouse_record`：仓储记录（IN/OUT）
+- `trace_event`：链式溯源事件（哈希防篡改）
 
-### 3.3 前后端协作
-- 前端通过 Axios 调用 `/api/*`
-- 后端统一返回 `ApiResponse`：`code + message + data`
-- 后端通过 CORS 配置允许本地前端访问
+## 4. 防篡改与溯源链
 
-### 3.4 区块链扩展点
-`BlockchainEvidenceService` 当前返回模拟交易号 `SIM-xxxx`，后续可替换为：
-- Fabric SDK 写链
-- 返回真实 `txId`
-- 保留 `on_chain_tx_id` 字段用于审计
+`trace_event` 记录以下关键字段：
+- `prev_hash`
+- `block_hash`
+- `on_chain_tx_id`
 
-## 4. 非功能目标
+通过 `SHA-256` 形成链式结构，查询时执行完整性校验并返回 `integrityValid`。
 
-- **可扩展性**：前后端解耦，便于接入小程序/移动端
-- **可维护性**：接口清晰，前后端可独立迭代
-- **安全性**：关键数据哈希校验，防篡改
-- **落地性**：结构简洁，适合毕业设计演示部署
+## 5. 统计能力（ECharts）
+
+后端提供轻量统计接口，前端直连渲染三张图：
+1. 各产品批次数量（柱状图）
+2. 质检合格/不合格占比（饼图）
+3. 近 6 个月批次趋势（折线图）
+
+## 6. 可扩展方向
+
+- 接入真实区块链（Fabric）替换模拟存证
+- 升级为 Spring Security + JWT
+- 增加分页、数据权限与审计日志
+- 接入 IoT 实时采集与告警链路

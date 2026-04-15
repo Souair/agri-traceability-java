@@ -5,8 +5,12 @@ import com.shaoyang.traceability.domain.dto.CreateTraceEventRequest;
 import com.shaoyang.traceability.domain.dto.TraceChainResponse;
 import com.shaoyang.traceability.domain.entity.ProductBatch;
 import com.shaoyang.traceability.domain.entity.TraceEvent;
+import com.shaoyang.traceability.mapper.ProcessingRecordMapper;
 import com.shaoyang.traceability.mapper.ProductBatchMapper;
+import com.shaoyang.traceability.mapper.ProductionRecordMapper;
+import com.shaoyang.traceability.mapper.QualityRecordMapper;
 import com.shaoyang.traceability.mapper.TraceEventMapper;
+import com.shaoyang.traceability.mapper.WarehouseRecordMapper;
 import com.shaoyang.traceability.util.HashUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,13 +26,25 @@ public class TraceabilityService {
 
     private final ProductBatchMapper productBatchMapper;
     private final TraceEventMapper traceEventMapper;
+    private final ProductionRecordMapper productionRecordMapper;
+    private final ProcessingRecordMapper processingRecordMapper;
+    private final QualityRecordMapper qualityRecordMapper;
+    private final WarehouseRecordMapper warehouseRecordMapper;
     private final BlockchainEvidenceService blockchainEvidenceService;
 
     public TraceabilityService(ProductBatchMapper productBatchMapper,
                                TraceEventMapper traceEventMapper,
+                               ProductionRecordMapper productionRecordMapper,
+                               ProcessingRecordMapper processingRecordMapper,
+                               QualityRecordMapper qualityRecordMapper,
+                               WarehouseRecordMapper warehouseRecordMapper,
                                BlockchainEvidenceService blockchainEvidenceService) {
         this.productBatchMapper = productBatchMapper;
         this.traceEventMapper = traceEventMapper;
+        this.productionRecordMapper = productionRecordMapper;
+        this.processingRecordMapper = processingRecordMapper;
+        this.qualityRecordMapper = qualityRecordMapper;
+        this.warehouseRecordMapper = warehouseRecordMapper;
         this.blockchainEvidenceService = blockchainEvidenceService;
     }
 
@@ -90,7 +106,13 @@ public class TraceabilityService {
 
         List<TraceEvent> events = traceEventMapper.findByBatchId(batch.getId());
         boolean integrityValid = verifyChain(events);
-        return new TraceChainResponse(batch, events, integrityValid);
+
+        TraceChainResponse response = new TraceChainResponse(batch, events, integrityValid);
+        response.setProductionRecords(productionRecordMapper.findByBatchId(batch.getId()));
+        response.setProcessingRecords(processingRecordMapper.findByBatchId(batch.getId()));
+        response.setQualityRecords(qualityRecordMapper.findByBatchId(batch.getId()));
+        response.setWarehouseRecords(warehouseRecordMapper.findByBatchId(batch.getId()));
+        return response;
     }
 
     private boolean verifyChain(List<TraceEvent> events) {

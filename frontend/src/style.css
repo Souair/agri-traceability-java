@@ -455,6 +455,89 @@ code {
   overflow-x: auto;
 }
 
+.user-panel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-name {
+  font-weight: 700;
+}
+
+.user-role {
+  font-size: 12px;
+  color: #9fe9c8;
+}
+
+.auth-wrap {
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.demo-login ul {
+  margin: 6px 0 0;
+  padding-left: 18px;
+}
+
+.record-grid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.qr-wrap {
+  margin-top: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.qr-wrap img {
+  width: 180px;
+  border-radius: 12px;
+  background: #fff;
+  padding: 8px;
+}
+
+.scanner-wrap {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed rgba(151, 240, 198, 0.38);
+}
+
+.scanner-video {
+  width: 100%;
+  max-height: 320px;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #000;
+}
+
+.chart-box {
+  margin-top: 8px;
+  width: 100%;
+  height: 320px;
+}
+
+.stat-mini {
+  display: grid;
+  gap: 4px;
+}
+
+.stat-mini strong {
+  font-size: 32px;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -491,7 +574,8 @@ tbody tr.selected {
   .page-grid,
   .stats-grid,
   .filters,
-  .meta-grid {
+  .meta-grid,
+  .record-grid {
     grid-template-columns: 1fr;
   }
 
@@ -509,5 +593,14 @@ tbody tr.selected {
 
   .container {
     padding: 14px 12px 24px;
+  }
+
+  .user-panel {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .chart-box {
+    height: 280px;
   }
 }

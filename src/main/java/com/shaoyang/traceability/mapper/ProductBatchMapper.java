@@ -4,7 +4,9 @@ import com.shaoyang.traceability.domain.entity.ProductBatch;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 
@@ -26,4 +28,7 @@ public interface ProductBatchMapper {
 
     @Select("SELECT * FROM product_batch ORDER BY id DESC")
     List<ProductBatch> findAll();
+
+    @Update("UPDATE product_batch SET status = #{status} WHERE id = #{id}")
+    int updateStatus(@Param("id") Long id, @Param("status") String status);
 }
