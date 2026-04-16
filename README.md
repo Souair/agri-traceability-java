@@ -35,7 +35,7 @@ agri-traceability-java
 │   │   ├── router/
 │   │   ├── stores/
 │   │   └── views/
-├── src/main/java/com/shaoyang/traceability
+├── src/main/java/com/agritrace/traceability
 │   ├── controller/
 │   ├── service/
 │   ├── mapper/

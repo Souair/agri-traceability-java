@@ -33,12 +33,6 @@
     </div>
 
     <div class="card span-2 dashboard-summary">
-      <div class="summary-copy">
-        <h3>本页说明</h3>
-        <p class="hint">
-          首页不堆砌概念词，直接给出经营视角最常用的几个判断：批次规模、质检表现、趋势变化，以及主要产品结构。
-        </p>
-      </div>
       <div class="summary-tags">
         <span class="pill">默认地区：邵阳市大祥区（项目设定）</span>
         <span class="pill">登录后可访问</span>

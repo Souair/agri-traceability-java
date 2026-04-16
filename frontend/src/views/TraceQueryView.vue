@@ -1,7 +1,7 @@
 <template>
   <section class="card trace-page">
     <h2>二维码生成 + 扫码溯源</h2>
-    <p class="hint">支持手动输入二维码编号，或启用摄像头扫码（Chrome/Edge 推荐）。</p>
+    <p class="hint">支持手动输入二维码编号，或启用摄像头扫码。</p>
 
     <form class="row" @submit.prevent="handleQuery">
       <input v-model.trim="qrCode" placeholder="请输入二维码编号，例如 demo-qr-001" required />
@@ -48,9 +48,7 @@
         </div>
         <div>{{ event.location }} ｜ {{ event.operatorName }}</div>
         <div>{{ event.details }}</div>
-        <pre v-if="event.iotPayload" class="iot-block">{{ toPrettyJson(event.iotPayload) }}</pre>
-        <div class="hash">prevHash：{{ event.prevHash }}</div>
-        <div class="hash">blockHash：{{ event.blockHash }}</div>
+        <div v-if="event.iotPayload" class="hint">已记录环境监测数据（温湿度等）。</div>
       </div>
 
       <h3>生产记录</h3>
@@ -105,7 +103,7 @@
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { apiGet } from '../api/client'
-import { formatDateTime, stageLabel, statusLabel, toPrettyJson } from '../utils/trace'
+import { formatDateTime, stageLabel, statusLabel } from '../utils/trace'
 
 const route = useRoute()
 const router = useRouter()
@@ -165,7 +163,7 @@ async function startScanner() {
   }
 
   if (typeof window.BarcodeDetector === 'undefined') {
-    scanHint.value = '当前浏览器不支持 BarcodeDetector，请使用 Chrome/Edge。'
+    scanHint.value = '当前环境暂不支持摄像头扫码，请手动输入二维码编号或更换设备后重试。'
     return
   }
 

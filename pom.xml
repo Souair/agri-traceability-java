@@ -11,7 +11,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.shaoyang</groupId>
+    <groupId>com.agritrace</groupId>
     <artifactId>agri-traceability-system</artifactId>
     <version>1.0.0</version>
     <name>agri-traceability-system</name>

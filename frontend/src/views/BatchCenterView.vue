@@ -91,7 +91,7 @@
             </div>
             <p>{{ event.details }}</p>
             <p class="hint">{{ event.location }} ｜ {{ event.operatorName }}</p>
-            <pre v-if="event.iotPayload" class="iot-block">{{ toPrettyJson(event.iotPayload) }}</pre>
+            <div v-if="event.iotPayload" class="hint">已记录环境监测数据（温湿度等）。</div>
           </div>
         </article>
       </div>
@@ -103,7 +103,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import { apiGet } from '../api/client'
-import { formatDate, formatDateTime, latestEvent, stageLabel, statusLabel, toPrettyJson } from '../utils/trace'
+import { formatDate, formatDateTime, latestEvent, stageLabel, statusLabel } from '../utils/trace'
 
 const loading = ref(false)
 const error = ref('')
