@@ -1,5 +1,5 @@
 :root {
-  font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', system-ui, -apple-system, sans-serif;
+  font-family: 'SF Pro Display', 'SF Pro Text', -apple-system, BlinkMacSystemFont, 'Inter', 'PingFang SC', 'Microsoft YaHei', 'Noto Sans SC', sans-serif;
   line-height: 1.5;
   color-scheme: dark;
   --bg-base: #0d1525;
@@ -45,7 +45,7 @@
   --danger: #cb4949;
   --warning: #b9770e;
   --ok: #1f8f58;
-  --shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  --shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
   --btn-secondary-bg: #f4f4f7;
   --btn-secondary-border: rgba(110, 110, 115, 0.24);
   --btn-light-bg: #ffffff;
@@ -181,15 +181,15 @@ a {
 }
 
 .container {
-  max-width: 1240px;
+  max-width: 1180px;
   margin: 0 auto;
-  padding: 26px 16px 34px;
+  padding: 34px 20px 42px;
 }
 
 .page-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: 18px;
 }
 
 .span-2 {
@@ -200,8 +200,8 @@ a {
   background: var(--surface);
   border: 1px solid var(--border);
   box-shadow: var(--shadow);
-  border-radius: 18px;
-  padding: 20px;
+  border-radius: 20px;
+  padding: 24px;
   transition: box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
@@ -229,11 +229,15 @@ h4 {
 }
 
 h2 {
-  font-size: 22px;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 h3 {
-  font-size: 18px;
+  font-size: 20px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
 }
 
 h4 {
@@ -241,7 +245,7 @@ h4 {
 }
 
 p {
-  margin: 8px 0;
+  margin: 10px 0;
 }
 
 .row {
@@ -367,12 +371,13 @@ button:disabled {
 }
 
 .pill {
-  background: color-mix(in srgb, var(--primary) 14%, transparent);
-  border: 1px solid color-mix(in srgb, var(--primary) 24%, transparent);
-  color: var(--text-main);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--primary) 20%, transparent);
+  color: color-mix(in srgb, var(--primary) 78%, #1d1d1f);
   border-radius: 999px;
-  padding: 5px 10px;
+  padding: 6px 12px;
   font-size: 12px;
+  font-weight: 600;
 }
 
 .hint {
@@ -429,9 +434,10 @@ code {
 
 .stat-card strong,
 .stat-mini strong {
-  font-size: 30px;
+  font-size: 34px;
   color: var(--text-main);
-  line-height: 1.1;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
 }
 
 .stat-card small {
@@ -762,7 +768,7 @@ tbody tr.selected {
   }
 
   .container {
-    padding: 14px 12px 24px;
+    padding: 18px 14px 28px;
   }
 
   .topbar-actions,
