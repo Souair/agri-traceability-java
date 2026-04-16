@@ -1,8 +1,8 @@
 <template>
-  <section class="auth-wrap card">
-    <div class="section-title">
-      <h2>用户模块</h2>
-      <div class="hint">支持管理员 / 企业 / 普通用户</div>
+  <section class="auth-wrap card glass">
+    <div class="auth-header">
+      <h2>登录平台</h2>
+      <div class="hint">未登录不可进入平台页面，请先登录或注册账号。</div>
     </div>
 
     <div class="auth-tabs">
@@ -36,7 +36,7 @@
 
         <label>
           企业名称（企业角色建议填写）
-          <input v-model.trim="form.enterpriseName" placeholder="例如：雨湖区示范农场" />
+          <input v-model.trim="form.enterpriseName" placeholder="例如：大祥区示范农场" />
         </label>
       </template>
 

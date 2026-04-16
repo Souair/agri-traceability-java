@@ -2,29 +2,36 @@
   <div class="app-shell">
     <header class="topbar">
       <div class="brand">
-        <span class="brand-icon">🌾</span>
+        <span class="brand-icon">农</span>
         <div>
-          <h1>智慧农产品溯源平台</h1>
-          <p>现代农业科技 · 全流程追溯 · 多角色协同</p>
+          <h1>农产品溯源平台</h1>
+          <p>Agri Traceability Platform</p>
         </div>
       </div>
 
-      <nav class="nav-tabs">
-        <RouterLink to="/dashboard">数据统计</RouterLink>
+      <nav v-if="authState.user" class="nav-tabs">
+        <RouterLink to="/dashboard">概览</RouterLink>
         <RouterLink to="/batch-center">批次中心</RouterLink>
-        <RouterLink to="/trace">扫码溯源</RouterLink>
-        <RouterLink v-if="isManagerRole()" to="/ops">业务管理</RouterLink>
+        <RouterLink to="/trace">溯源查询</RouterLink>
+        <RouterLink v-if="isManagerRole()" to="/ops">运营台</RouterLink>
       </nav>
 
-      <div class="user-panel" v-if="authState.user">
-        <div>
-          <div class="user-name">{{ authState.user.username }}</div>
-          <div class="user-role">{{ roleLabel(authState.user.role) }}</div>
+      <div class="topbar-actions">
+        <button class="theme-toggle" type="button" @click="toggleTheme">
+          <span>{{ theme === 'light' ? '🌙' : '☀️' }}</span>
+          <span>{{ theme === 'light' ? '深色模式' : '浅色模式' }}</span>
+        </button>
+
+        <div class="user-panel" v-if="authState.user">
+          <div>
+            <div class="user-name">{{ authState.user.username }}</div>
+            <div class="user-role">{{ roleLabel(authState.user.role) }}</div>
+          </div>
+          <button class="btn btn-light" @click="handleLogout">退出</button>
         </div>
-        <button class="btn btn-light" @click="handleLogout">退出</button>
-      </div>
-      <div v-else>
-        <RouterLink class="btn btn-light" to="/auth">登录 / 注册</RouterLink>
+        <div v-else>
+          <RouterLink class="btn btn-light" to="/auth">登录 / 注册</RouterLink>
+        </div>
       </div>
     </header>
 
@@ -35,10 +42,29 @@
 </template>
 
 <script setup>
+import { onMounted, ref, watch } from 'vue'
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { authState, isManagerRole, logout, roleLabel } from './stores/auth'
 
 const router = useRouter()
+const theme = ref(localStorage.getItem('agri-traceability-theme') || 'dark')
+
+function applyTheme(mode) {
+  document.documentElement.setAttribute('data-theme', mode)
+  localStorage.setItem('agri-traceability-theme', mode)
+}
+
+function toggleTheme() {
+  theme.value = theme.value === 'light' ? 'dark' : 'light'
+}
+
+watch(theme, (value) => {
+  applyTheme(value)
+}, { immediate: true })
+
+onMounted(() => {
+  applyTheme(theme.value)
+})
 
 function handleLogout() {
   logout()

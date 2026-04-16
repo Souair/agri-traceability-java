@@ -17,11 +17,11 @@
         </label>
         <label>
           产地
-          <input v-model.trim="batchForm.origin" placeholder="例如：湖南省湘潭市雨湖区" required />
+          <input v-model.trim="batchForm.origin" placeholder="例如：湖南省邵阳市大祥区" required />
         </label>
         <label>
           生产主体
-          <input v-model.trim="batchForm.producer" placeholder="例如：雨湖生态合作社" required />
+          <input v-model.trim="batchForm.producer" placeholder="例如：大祥生态合作社" required />
         </label>
         <label>
           种植日期
@@ -218,8 +218,8 @@ function fillBatchTemplate() {
   batchForm.value = {
     batchCode: '',
     productName: '高山有机辣椒',
-    origin: '湖南省湘潭市雨湖区',
-    producer: '雨湖生态合作社',
+    origin: '湖南省邵阳市大祥区',
+    producer: '大祥生态合作社',
     plantingDate: '2026-04-01',
     harvestDate: ''
   }
@@ -229,7 +229,7 @@ function fillEventTemplate() {
   eventForm.value.stage = 'INSPECTION'
   eventForm.value.eventTime = nowLocalInputValue()
   eventForm.value.operatorName = '质检员王敏'
-  eventForm.value.location = '雨湖区检测中心'
+  eventForm.value.location = '大祥区检测中心'
   eventForm.value.details = '抽样检测通过，允许进入下一环节'
   eventForm.value.iotPayload = '{"temperature":22,"humidity":62}'
 }
@@ -309,7 +309,7 @@ async function autoCompleteStages() {
       INSPECTION: ['农残与重金属抽检通过', '{"pesticideResidue":"PASS"}', '质检员王敏', '区级检测站'],
       PROCESSING: ['分拣包装完成，进入待发货区', '{"packingLine":"L2"}', '加工员赵宁', '分拣车间'],
       LOGISTICS: ['冷链装车并发往配送中心', '{"temperature":4}', '物流调度李杰', '冷链中转仓'],
-      SALES: ['上架销售，渠道可追溯信息同步', '{"store":"雨湖生鲜店"}', '门店店长周婷', '雨湖生鲜门店']
+      SALES: ['上架销售，渠道可追溯信息同步', '{"store":"大祥生鲜店"}', '门店店长周婷', '大祥生鲜门店']
     }
 
     const appendStages = stageOrder.filter((stage) => !existing.has(stage))

@@ -147,8 +147,12 @@
       <div v-if="qrPreview" class="qr-wrap">
         <img :src="qrPreview" alt="二维码" />
         <div>
-          <p>二维码内容：</p>
+          <p><b>二维码内容：</b></p>
           <code>{{ qrText }}</code>
+          <p class="hint" style="margin-top: 10px">
+            已使用高对比度黑白码、加大白边和尺寸，更适合手机扫码。
+            若前端部署在内网/本机，请配置 <code>VITE_PUBLIC_TRACE_BASE_URL</code> 为可被手机访问的域名。
+          </p>
         </div>
       </div>
       <p v-else class="hint">选择批次后点击“生成二维码”</p>
@@ -178,8 +182,8 @@ const productForm = reactive({
 
 const batchForm = reactive({
   productName: '',
-  origin: '湖南省湘潭市雨湖区',
-  producer: '雨湖区示范农场',
+  origin: '湖南省邵阳市大祥区',
+  producer: '大祥区示范农场',
   plantingDate: '',
   harvestDate: ''
 })
@@ -361,17 +365,34 @@ function getBatchQr(batchId) {
   return target?.qrCode || ''
 }
 
+function buildTraceQrText(code) {
+  const publicBaseUrl = (import.meta.env.VITE_PUBLIC_TRACE_BASE_URL || '').trim()
+  const { origin, hostname } = window.location
+  const isLocalHost = ['localhost', '127.0.0.1', '0.0.0.0'].includes(hostname)
+
+  if (publicBaseUrl) {
+    return `${publicBaseUrl.replace(/\/$/, '')}/trace?qr=${encodeURIComponent(code)}`
+  }
+
+  if (isLocalHost) {
+    return code
+  }
+
+  return `${origin}/trace?qr=${encodeURIComponent(code)}`
+}
+
 async function generateBatchQr() {
   const code = getBatchQr(qrBatchId.value)
   if (!code) return
 
-  const text = `${window.location.origin}/trace?qr=${encodeURIComponent(code)}`
+  const text = buildTraceQrText(code)
   qrText.value = text
   qrPreview.value = await QRCode.toDataURL(text, {
-    margin: 1,
-    width: 220,
+    errorCorrectionLevel: 'H',
+    margin: 4,
+    width: 360,
     color: {
-      dark: '#073f2a',
+      dark: '#000000',
       light: '#ffffff'
     }
   })

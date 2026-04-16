@@ -54,6 +54,7 @@ const lineRef = ref(null)
 let barChart
 let pieChart
 let lineChart
+let themeObserver
 
 const totalBatches = computed(() => Object.values(productBatchStats.value).reduce((sum, value) => sum + Number(value || 0), 0))
 const totalQuality = computed(() => Number(qualityRatioStats.value.PASS || 0) + Number(qualityRatioStats.value.FAIL || 0))
@@ -93,9 +94,22 @@ function initCharts() {
   }
 }
 
+function themeVars() {
+  const style = getComputedStyle(document.documentElement)
+  return {
+    textMain: style.getPropertyValue('--text-main').trim() || '#e5eefb',
+    textSub: style.getPropertyValue('--text-sub').trim() || '#95a6c6',
+    border: style.getPropertyValue('--border').trim() || 'rgba(148, 163, 184, 0.18)',
+    primary: style.getPropertyValue('--primary').trim() || '#7dd3a8',
+    primaryStrong: style.getPropertyValue('--primary-strong').trim() || '#4fd18b',
+    danger: style.getPropertyValue('--danger').trim() || '#f59c9c'
+  }
+}
+
 function renderCharts() {
   initCharts()
 
+  const { textMain, textSub, border, primary, primaryStrong, danger } = themeVars()
   const names = Object.keys(productBatchStats.value)
   const counts = names.map((name) => Number(productBatchStats.value[name] || 0))
 
@@ -105,12 +119,12 @@ function renderCharts() {
     xAxis: {
       type: 'category',
       data: names,
-      axisLabel: { color: '#d8f5e7' }
+      axisLabel: { color: textSub }
     },
     yAxis: {
       type: 'value',
-      axisLabel: { color: '#d8f5e7' },
-      splitLine: { lineStyle: { color: 'rgba(255,255,255,0.12)' } }
+      axisLabel: { color: textSub },
+      splitLine: { lineStyle: { color: border } }
     },
     series: [
       {
@@ -118,7 +132,7 @@ function renderCharts() {
         data: counts,
         itemStyle: {
           borderRadius: [6, 6, 0, 0],
-          color: '#42d58b'
+          color: primaryStrong
         }
       }
     ]
@@ -128,17 +142,17 @@ function renderCharts() {
     tooltip: { trigger: 'item' },
     legend: {
       bottom: 0,
-      textStyle: { color: '#d8f5e7' }
+      textStyle: { color: textSub }
     },
     series: [
       {
         type: 'pie',
         radius: ['45%', '72%'],
         avoidLabelOverlap: false,
-        label: { color: '#d8f5e7' },
+        label: { color: textMain },
         data: [
-          { value: Number(qualityRatioStats.value.PASS || 0), name: '合格', itemStyle: { color: '#5be58f' } },
-          { value: Number(qualityRatioStats.value.FAIL || 0), name: '不合格', itemStyle: { color: '#ff8b8b' } }
+          { value: Number(qualityRatioStats.value.PASS || 0), name: '合格', itemStyle: { color: primary } },
+          { value: Number(qualityRatioStats.value.FAIL || 0), name: '不合格', itemStyle: { color: danger } }
         ]
       }
     ]
@@ -149,22 +163,22 @@ function renderCharts() {
     xAxis: {
       type: 'category',
       data: monthlyStats.value.map((item) => item.month),
-      axisLabel: { color: '#d8f5e7' }
+      axisLabel: { color: textSub }
     },
     yAxis: {
       type: 'value',
-      axisLabel: { color: '#d8f5e7' },
-      splitLine: { lineStyle: { color: 'rgba(255,255,255,0.12)' } }
+      axisLabel: { color: textSub },
+      splitLine: { lineStyle: { color: border } }
     },
     series: [
       {
         type: 'line',
         smooth: true,
         data: monthlyStats.value.map((item) => Number(item.count || 0)),
-        lineStyle: { color: '#82ffd2', width: 3 },
-        itemStyle: { color: '#82ffd2' },
+        lineStyle: { color: primary, width: 3 },
+        itemStyle: { color: primaryStrong },
         areaStyle: {
-          color: 'rgba(130, 255, 210, 0.25)'
+          color: `${primary}55`
         }
       }
     ]
@@ -179,11 +193,19 @@ function resizeCharts() {
 
 onMounted(async () => {
   window.addEventListener('resize', resizeCharts)
+  themeObserver = new MutationObserver(() => {
+    renderCharts()
+  })
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme']
+  })
   await loadData()
 })
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', resizeCharts)
+  themeObserver?.disconnect()
   barChart?.dispose()
   pieChart?.dispose()
   lineChart?.dispose()
