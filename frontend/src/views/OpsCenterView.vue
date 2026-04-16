@@ -148,11 +148,7 @@
         <img :src="qrPreview" alt="二维码" />
         <div>
           <p><b>二维码内容：</b></p>
-          <code>{{ qrText }}</code>
-          <p class="hint" style="margin-top: 10px">
-            已使用高对比度黑白码、加大白边和尺寸，更适合手机扫码。
-            若前端部署在内网/本机，请配置 <code>VITE_PUBLIC_TRACE_BASE_URL</code> 为可被手机访问的域名。
-          </p>
+          <pre class="iot-block">{{ qrText }}</pre>
         </div>
       </div>
       <p v-else class="hint">选择批次后点击“生成二维码”</p>
@@ -165,6 +161,7 @@ import QRCode from 'qrcode'
 import { onMounted, reactive, ref } from 'vue'
 import { RouterLink } from 'vue-router'
 import { apiGet, apiPost, apiPut } from '../api/client'
+import { statusLabel } from '../utils/trace'
 
 const loading = ref(false)
 const error = ref('')
@@ -365,37 +362,60 @@ function getBatchQr(batchId) {
   return target?.qrCode || ''
 }
 
-function buildTraceQrText(code) {
-  const publicBaseUrl = (import.meta.env.VITE_PUBLIC_TRACE_BASE_URL || '').trim()
-  const { origin, hostname } = window.location
-  const isLocalHost = ['localhost', '127.0.0.1', '0.0.0.0'].includes(hostname)
-
-  if (publicBaseUrl) {
-    return `${publicBaseUrl.replace(/\/$/, '')}/trace?qr=${encodeURIComponent(code)}`
+function sectionLine(title, list) {
+  if (list?.length) {
+    return `\n${title}\n共 ${list.length} 条`
   }
 
-  if (isLocalHost) {
-    return code
+  const emptyTextMap = {
+    '链式溯源事件': '暂无事件记录',
+    '生产记录': '暂无生产记录',
+    '加工记录': '暂无加工记录',
+    '质检管理': '暂无质检记录',
+    '仓储记录': '暂无仓储记录'
   }
 
-  return `${origin}/trace?qr=${encodeURIComponent(code)}`
+  return `\n${title}\n${emptyTextMap[title] || '暂无记录'}`
+}
+
+async function buildTraceQrText(batch) {
+  const trace = await apiGet(`/trace/${encodeURIComponent(batch.qrCode)}`)
+  const text = [
+    `产品：${batch.productName}`,
+    `批次：${batch.batchCode}`,
+    `产地：${batch.origin}`,
+    `生产者：${batch.producer}`,
+    `状态：${statusLabel(batch.status)}`,
+    `二维码：${batch.qrCode}`,
+    `数据完整性：${trace.integrityValid ? '校验通过' : '存在异常'}`,
+    sectionLine('链式溯源事件', trace.events),
+    sectionLine('生产记录', trace.productionRecords),
+    sectionLine('加工记录', trace.processingRecords),
+    sectionLine('质检管理', trace.qualityRecords),
+    sectionLine('仓储记录', trace.warehouseRecords)
+  ]
+  return text.join('\n')
 }
 
 async function generateBatchQr() {
-  const code = getBatchQr(qrBatchId.value)
-  if (!code) return
+  const batch = batches.value.find((item) => Number(item.id) === Number(qrBatchId.value))
+  if (!batch?.qrCode) return
 
-  const text = buildTraceQrText(code)
-  qrText.value = text
-  qrPreview.value = await QRCode.toDataURL(text, {
-    errorCorrectionLevel: 'H',
-    margin: 4,
-    width: 360,
-    color: {
-      dark: '#000000',
-      light: '#ffffff'
-    }
-  })
+  try {
+    const text = await buildTraceQrText(batch)
+    qrText.value = text
+    qrPreview.value = await QRCode.toDataURL(text, {
+      errorCorrectionLevel: 'H',
+      margin: 4,
+      width: 360,
+      color: {
+        dark: '#000000',
+        light: '#ffffff'
+      }
+    })
+  } catch (err) {
+    toastErr(err)
+  }
 }
 
 onMounted(reloadAll)

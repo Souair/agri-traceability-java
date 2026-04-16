@@ -207,13 +207,22 @@ async function startScanner() {
 }
 
 function extractQr(text) {
+  const plain = String(text || '').trim()
+
   try {
-    const url = new URL(text)
+    const url = new URL(plain)
     const q = url.searchParams.get('qr')
-    return q || text
+    if (q) return q
   } catch {
-    return text
+    // ignore
   }
+
+  const lineMatch = plain.match(/二维码[:：]\s*([A-Za-z0-9\-_.]+)/)
+  if (lineMatch?.[1]) {
+    return lineMatch[1]
+  }
+
+  return plain
 }
 
 function stopScanner() {

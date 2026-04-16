@@ -32,13 +32,6 @@
       <small class="hint">峰值月份：{{ peakMonth.month || '—' }}</small>
     </div>
 
-    <div class="card span-2 dashboard-summary">
-      <div class="summary-tags">
-        <span class="pill">默认地区：邵阳市大祥区（项目设定）</span>
-        <span class="pill">登录后可访问</span>
-        <span class="pill">支持浅色 / 深色切换</span>
-      </div>
-    </div>
 
     <div class="card span-2">
       <div class="section-title">

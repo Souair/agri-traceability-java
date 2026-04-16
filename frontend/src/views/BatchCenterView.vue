@@ -64,7 +64,7 @@
         <h3>{{ selectedBatch.productName }} · {{ selectedBatch.batchCode }}</h3>
         <div class="actions-inline">
           <button class="btn btn-light" @click="copyQrCode(selectedBatch.qrCode)">复制二维码编号</button>
-          <button class="btn btn-light" @click="exportBatchReport">导出追溯报告(JSON)</button>
+          <button class="btn btn-light" @click="exportBatchReport">导出追溯报告（TXT）</button>
         </div>
       </div>
 
@@ -79,7 +79,6 @@
         链路校验：
         <span :class="integrityClass(selectedTrace)">{{ integrityText(selectedTrace) }}</span>
       </p>
-      <p class="hint">当前项目默认展示地区设定为：邵阳市大祥区。</p>
 
       <div class="timeline" v-if="selectedTrace?.events?.length">
         <article class="timeline-item" v-for="event in selectedTrace.events" :key="event.id">
@@ -205,18 +204,32 @@ async function copyQrCode(qrCode) {
 
 function exportBatchReport() {
   if (!selectedBatch.value) return
-  const trace = selectedTrace.value || { events: [], integrityValid: false }
-  const payload = {
-    exportedAt: new Date().toISOString(),
-    batch: selectedBatch.value,
-    trace
-  }
 
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' })
+  const trace = selectedTrace.value || { events: [], integrityValid: false }
+  const lines = [
+    `产品：${selectedBatch.value.productName}`,
+    `批次：${selectedBatch.value.batchCode}`,
+    `产地：${selectedBatch.value.origin}`,
+    `生产者：${selectedBatch.value.producer}`,
+    `状态：${statusLabel(selectedBatch.value.status)}`,
+    `二维码：${selectedBatch.value.qrCode}`,
+    `数据完整性：${trace.integrityValid ? '校验通过' : '存在异常'}`,
+    '',
+    '链式溯源事件',
+    trace.events?.length ? `共 ${trace.events.length} 条` : '暂无事件记录'
+  ]
+
+  lines.push('', '生产记录', trace.productionRecords?.length ? `共 ${trace.productionRecords.length} 条` : '暂无生产记录')
+  lines.push('', '加工记录', trace.processingRecords?.length ? `共 ${trace.processingRecords.length} 条` : '暂无加工记录')
+  lines.push('', '质检管理', trace.qualityRecords?.length ? `共 ${trace.qualityRecords.length} 条` : '暂无质检记录')
+  lines.push('', '仓储记录', trace.warehouseRecords?.length ? `共 ${trace.warehouseRecords.length} 条` : '暂无仓储记录')
+
+  const content = lines.join('\n')
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a')
   a.href = url
-  a.download = `${selectedBatch.value.batchCode}-trace-report.json`
+  a.download = `${selectedBatch.value.batchCode}-trace-report.txt`
   a.click()
   URL.revokeObjectURL(url)
 }

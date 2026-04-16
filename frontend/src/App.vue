@@ -23,7 +23,7 @@
         </button>
 
         <div class="user-panel" v-if="authState.user">
-          <div>
+          <div class="user-card">
             <div class="user-name">{{ authState.user.username }}</div>
             <div class="user-role">{{ roleLabel(authState.user.role) }}</div>
           </div>
