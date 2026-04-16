@@ -23,9 +23,10 @@
         </button>
 
         <div class="user-panel" v-if="authState.user">
-          <div class="user-card">
-            <div class="user-name">{{ authState.user.username }}</div>
-            <div class="user-role">{{ roleLabel(authState.user.role) }}</div>
+          <div class="user-card user-card-inline">
+            <span class="user-name">{{ authState.user.username }}</span>
+            <span class="user-divider">·</span>
+            <span class="user-role">{{ roleLabel(authState.user.role) }}</span>
           </div>
           <button class="btn btn-light" @click="handleLogout">退出</button>
         </div>
