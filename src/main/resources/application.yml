@@ -2,17 +2,16 @@ spring:
   application:
     name: agri-traceability-system
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:traceability;MODE=MySQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:agri_traceability}?useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:123456}
   sql:
     init:
+      mode: ${APP_SQL_INIT_MODE:never}
       encoding: UTF-8
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: Asia/Shanghai
@@ -21,6 +20,11 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
     default-fetch-size: 200
+
+project:
+  data-fix:
+    region:
+      enabled: ${PROJECT_REGION_DATA_FIX_ENABLED:true}
 
 server:
   port: 8080

@@ -1,37 +1,76 @@
 <template>
   <section class="page-grid">
-    <div class="card span-2 glass">
-      <div class="section-title">
-        <h2>ECharts 数据统计</h2>
-        <button class="btn btn-secondary" @click="loadData" :disabled="loading">{{ loading ? '刷新中...' : '刷新图表' }}</button>
+    <div class="card span-2 glass dashboard-hero">
+      <div>
+        <span class="pill">运营概览</span>
+        <h2>农产品全流程追溯总览</h2>
+        <p class="hint">聚合批次、质检与近 6 个月产出趋势，帮助平台快速掌握运行状态。</p>
       </div>
-      <p class="hint">三张核心图：产品批次数量柱状图、质检占比饼图、近6个月批次趋势折线图。</p>
-      <p v-if="error" class="error">{{ error }}</p>
+      <div class="actions-inline">
+        <button class="btn btn-secondary" @click="loadData" :disabled="loading">{{ loading ? '刷新中...' : '刷新数据' }}</button>
+      </div>
     </div>
 
     <div class="card stat-mini">
       <span>批次总量</span>
       <strong>{{ totalBatches }}</strong>
+      <small class="hint">当前平台已登记的产品批次数</small>
     </div>
     <div class="card stat-mini">
       <span>质检记录</span>
       <strong>{{ totalQuality }}</strong>
+      <small class="hint">已纳入平台归档的质检条目</small>
+    </div>
+    <div class="card stat-mini">
+      <span>合格率</span>
+      <strong>{{ passRate }}%</strong>
+      <small class="hint">按现有质检记录自动统计</small>
+    </div>
+    <div class="card stat-mini">
+      <span>近 6 月峰值</span>
+      <strong>{{ peakMonth.count }}</strong>
+      <small class="hint">峰值月份：{{ peakMonth.month || '—' }}</small>
+    </div>
+
+    <div class="card span-2 dashboard-summary">
+      <div class="summary-copy">
+        <h3>本页说明</h3>
+        <p class="hint">
+          首页不堆砌概念词，直接给出经营视角最常用的几个判断：批次规模、质检表现、趋势变化，以及主要产品结构。
+        </p>
+      </div>
+      <div class="summary-tags">
+        <span class="pill">默认地区：邵阳市大祥区（项目设定）</span>
+        <span class="pill">登录后可访问</span>
+        <span class="pill">支持浅色 / 深色切换</span>
+      </div>
     </div>
 
     <div class="card span-2">
-      <h3>柱状图：各类产品批次数量统计</h3>
+      <div class="section-title">
+        <h3>各类产品批次数量统计</h3>
+        <span class="hint">用于观察平台当前品类分布</span>
+      </div>
       <div ref="barRef" class="chart-box"></div>
     </div>
 
     <div class="card">
-      <h3>饼图：质检合格 / 不合格占比</h3>
+      <div class="section-title">
+        <h3>质检结果占比</h3>
+        <span class="hint">合格 / 不合格</span>
+      </div>
       <div ref="pieRef" class="chart-box"></div>
     </div>
 
     <div class="card">
-      <h3>折线图：近 6 个月生产批次趋势</h3>
+      <div class="section-title">
+        <h3>近 6 个月批次趋势</h3>
+        <span class="hint">反映阶段性产出变化</span>
+      </div>
       <div ref="lineRef" class="chart-box"></div>
     </div>
+
+    <p v-if="error" class="error span-2">{{ error }}</p>
   </section>
 </template>
 
@@ -58,6 +97,19 @@ let themeObserver
 
 const totalBatches = computed(() => Object.values(productBatchStats.value).reduce((sum, value) => sum + Number(value || 0), 0))
 const totalQuality = computed(() => Number(qualityRatioStats.value.PASS || 0) + Number(qualityRatioStats.value.FAIL || 0))
+const passRate = computed(() => {
+  if (!totalQuality.value) return 0
+  return Math.round((Number(qualityRatioStats.value.PASS || 0) / totalQuality.value) * 100)
+})
+const peakMonth = computed(() => {
+  if (!monthlyStats.value.length) {
+    return { month: '', count: 0 }
+  }
+
+  return monthlyStats.value.reduce((max, item) => {
+    return Number(item.count || 0) > Number(max.count || 0) ? item : max
+  }, monthlyStats.value[0])
+})
 
 async function loadData() {
   loading.value = true

@@ -1,8 +1,9 @@
 <template>
   <section class="page-grid">
-    <div class="card span-2">
+    <div class="card span-2 glass">
       <div class="section-title">
         <h2>批次中心</h2>
+         <span class="hint">集中查看批次台账、链路校验结果与追溯明细</span>
         <button class="btn btn-secondary" @click="loadData" :disabled="loading">
           {{ loading ? '加载中...' : '刷新批次' }}
         </button>
@@ -18,6 +19,7 @@
         </select>
       </div>
 
+      <p class="hint">点击表格行可查看该批次的完整时间线、校验状态和过程记录。</p>
       <p v-if="error" class="error">{{ error }}</p>
 
       <div class="table-wrap">
@@ -77,6 +79,7 @@
         链路校验：
         <span :class="integrityClass(selectedTrace)">{{ integrityText(selectedTrace) }}</span>
       </p>
+      <p class="hint">当前项目默认展示地区设定为：邵阳市大祥区。</p>
 
       <div class="timeline" v-if="selectedTrace?.events?.length">
         <article class="timeline-item" v-for="event in selectedTrace.events" :key="event.id">

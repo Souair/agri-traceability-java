@@ -59,7 +59,7 @@
   "name": "有机番茄",
   "category": "蔬菜",
   "description": "温室种植",
-  "ownerEnterprise": "雨湖区示范农场"
+  "ownerEnterprise": "大祥区示范农场"
 }
 ```
 
@@ -69,8 +69,8 @@
 ```json
 {
   "productName": "有机番茄",
-  "origin": "湖南省湘潭市雨湖区",
-  "producer": "雨湖区示范农场",
+  "origin": "湖南省邵阳市大祥区",
+  "producer": "大祥区示范农场",
   "plantingDate": "2026-03-20",
   "harvestDate": "2026-04-15"
 }
@@ -138,7 +138,7 @@
 {
   "recordType": "IN",
   "quantity": 1200,
-  "location": "湘潭雨湖冷库A区",
+  "location": "邵阳大祥冷库A区",
   "recordTime": "2026-04-15T17:00:00",
   "operatorName": "周明"
 }

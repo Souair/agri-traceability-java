@@ -77,7 +77,7 @@
 
         <label>
           地点
-          <input v-model.trim="eventForm.location" placeholder="例如：湘潭农残检测站" required />
+          <input v-model.trim="eventForm.location" placeholder="例如：邵阳农残检测站" required />
         </label>
 
         <label>
