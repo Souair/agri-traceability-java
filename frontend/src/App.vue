@@ -1,6 +1,6 @@
 <template>
-  <div class="app-shell">
-    <header class="topbar">
+  <div class="app-shell" :class="{ 'auth-shell': isAuthPage }">
+    <header v-if="!isAuthPage" class="topbar">
       <div class="brand">
         <span class="brand-icon">农</span>
         <div>
@@ -8,13 +8,6 @@
           <p>Agri Traceability Platform</p>
         </div>
       </div>
-
-      <nav v-if="authState.user" class="nav-tabs">
-        <RouterLink to="/dashboard">概览</RouterLink>
-        <RouterLink to="/batch-center">批次中心</RouterLink>
-        <RouterLink to="/trace">溯源查询</RouterLink>
-        <RouterLink v-if="isManagerRole()" to="/ops">运营台</RouterLink>
-      </nav>
 
       <div class="topbar-actions">
         <button class="theme-toggle" type="button" @click="toggleTheme">
@@ -36,19 +29,46 @@
       </div>
     </header>
 
-    <main class="container">
+    <div v-if="!isAuthPage && authState.user" class="layout-main">
+      <aside class="side-menu card glass">
+        <details open>
+          <summary>工作台</summary>
+          <RouterLink to="/dashboard">概览</RouterLink>
+        </details>
+
+        <details open>
+          <summary>追溯业务</summary>
+          <RouterLink to="/batch-center">批次中心</RouterLink>
+          <RouterLink to="/trace">溯源查询</RouterLink>
+        </details>
+
+        <details v-if="isManagerRole()" open>
+          <summary>运营管理</summary>
+          <RouterLink to="/ops">运营台</RouterLink>
+        </details>
+      </aside>
+
+      <main class="container content-area">
+        <RouterView />
+      </main>
+    </div>
+
+    <main v-else class="container" :class="{ 'auth-container': isAuthPage }">
       <RouterView />
     </main>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue'
-import { RouterLink, RouterView, useRouter } from 'vue-router'
+import { computed, onMounted, ref, watch } from 'vue'
+import { RouterLink, RouterView, useRoute, useRouter } from 'vue-router'
 import { authState, isManagerRole, logout, roleLabel } from './stores/auth'
 
 const router = useRouter()
+const route = useRoute()
 const theme = ref(localStorage.getItem('agri-traceability-theme') || 'dark')
+
+const isAuthPage = computed(() => route.path === '/auth')
 
 function applyTheme(mode) {
   document.documentElement.setAttribute('data-theme', mode)

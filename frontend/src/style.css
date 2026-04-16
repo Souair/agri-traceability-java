@@ -186,6 +186,79 @@ a {
   padding: 34px 20px 42px;
 }
 
+.auth-shell .container.auth-container {
+  max-width: 560px;
+  padding-top: 68px;
+}
+
+.layout-main {
+  max-width: 1380px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: 18px;
+  padding: 20px;
+}
+
+.content-area {
+  max-width: none;
+  padding: 0 0 22px;
+}
+
+.side-menu {
+  position: sticky;
+  top: 86px;
+  height: fit-content;
+  padding: 16px;
+  border-radius: 18px;
+  display: grid;
+  gap: 10px;
+}
+
+.side-menu details {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 8px;
+  background: color-mix(in srgb, var(--surface-strong) 94%, transparent);
+}
+
+.side-menu summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 13px;
+  color: var(--text-sub);
+  font-weight: 700;
+  padding: 6px 8px;
+}
+
+.side-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.side-menu a {
+  display: block;
+  margin: 6px 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  color: var(--text-sub);
+  text-decoration: none;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: all 0.18s ease;
+}
+
+.side-menu a:hover {
+  color: var(--text-main);
+  border-color: var(--border);
+  background: color-mix(in srgb, var(--surface-soft) 90%, transparent);
+}
+
+.side-menu a.router-link-active {
+  color: var(--primary-text);
+  border-color: transparent;
+  background: linear-gradient(120deg, var(--primary-strong), var(--primary));
+}
+
 .page-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -606,6 +679,12 @@ code {
   line-height: 1;
 }
 
+.auth-single-page {
+  min-height: calc(100vh - 180px);
+  display: grid;
+  place-items: center;
+}
+
 .auth-landing {
   align-items: stretch;
 }
@@ -818,7 +897,8 @@ tbody tr.selected {
   .stats-grid,
   .filters,
   .meta-grid,
-  .record-grid {
+  .record-grid,
+  .layout-main {
     grid-template-columns: 1fr;
   }
 
@@ -836,6 +916,15 @@ tbody tr.selected {
 
   .container {
     padding: 18px 14px 28px;
+  }
+
+  .content-area {
+    padding-bottom: 10px;
+  }
+
+  .side-menu {
+    position: static;
+    top: auto;
   }
 
   .topbar-actions,

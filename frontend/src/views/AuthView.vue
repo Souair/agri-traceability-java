@@ -1,22 +1,5 @@
 <template>
-  <section class="auth-landing page-grid">
-    <div class="card glass auth-intro auth-intro-clean">
-      <span class="pill">企业版入口</span>
-      <h2>农产品溯源平台</h2>
-      <p class="hint">请使用账号登录后进入业务页面。平台支持管理员、企业、普通用户三类角色。</p>
-
-      <div class="auth-feature-list compact">
-        <div class="auth-feature-item">
-          <strong>全链路记录</strong>
-          <span>覆盖生产、加工、质检、仓储、追溯查询</span>
-        </div>
-        <div class="auth-feature-item">
-          <strong>角色权限分层</strong>
-          <span>不同身份进入对应功能区，避免误操作</span>
-        </div>
-      </div>
-    </div>
-
+  <section class="auth-single-page">
     <section class="auth-wrap auth-capsule card glass">
       <div class="auth-header">
         <h2>{{ mode === 'login' ? '登录平台' : '注册账号' }}</h2>
