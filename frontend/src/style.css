@@ -692,12 +692,33 @@ code {
   gap: 18px;
 }
 
+.auth-template-like {
+  align-items: stretch;
+}
+
 .auth-panel {
   border-radius: 24px;
-  padding: 26px;
+  padding: 28px;
   display: grid;
   align-content: start;
   gap: 16px;
+  background: linear-gradient(160deg, color-mix(in srgb, var(--primary) 14%, var(--surface)) 0%, var(--surface) 100%);
+}
+
+.auth-brand-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.auth-brand-row strong {
+  display: block;
+  font-size: 15px;
+}
+
+.auth-brand-row .hint {
+  margin: 2px 0 0;
+  font-size: 12px;
 }
 
 .auth-points {
@@ -711,7 +732,7 @@ code {
   border-radius: 14px;
   padding: 12px;
   border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--surface-strong) 92%, transparent);
+  background: color-mix(in srgb, var(--surface-strong) 94%, transparent);
 }
 
 .auth-point strong {
@@ -729,6 +750,10 @@ code {
   margin-top: 12px;
 }
 
+.auth-demo-compact .demo-account-card {
+  align-items: center;
+}
+
 .demo-account-card {
   display: flex;
   align-items: center;
@@ -736,7 +761,7 @@ code {
   gap: 10px;
   padding: 12px;
   border-radius: 12px;
-  background: color-mix(in srgb, var(--surface-strong) 94%, transparent);
+  background: color-mix(in srgb, var(--surface-strong) 95%, transparent);
   border: 1px solid var(--border);
 }
 
@@ -749,21 +774,19 @@ code {
   border-radius: 24px;
   padding: 24px;
   backdrop-filter: saturate(160%) blur(14px);
-  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  background: color-mix(in srgb, var(--surface) 94%, transparent);
   border: 1px solid color-mix(in srgb, var(--border-strong) 24%, var(--border));
 }
 
 .auth-tabs {
   display: flex;
-  gap: 8px;
+  gap: 10px;
   margin-bottom: 12px;
 }
 
-.auth-tabs-capsule {
-  padding: 4px;
-  border-radius: 999px;
-  border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--surface-strong) 95%, transparent);
+.auth-tabs-line {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 6px;
 }
 
 .tab-pill {
@@ -782,11 +805,15 @@ code {
   box-shadow: none;
 }
 
-.tab-pill.active {
-  background: linear-gradient(120deg, var(--primary-strong), var(--primary));
-  color: var(--primary-text);
-  border-color: color-mix(in srgb, var(--primary-strong) 80%, transparent);
-  box-shadow: var(--btn-shadow);
+.tab-pill-line {
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.tab-pill-line.active {
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+  border-color: color-mix(in srgb, var(--primary) 26%, transparent);
+  color: var(--text-main);
 }
 
 .auth-header {
