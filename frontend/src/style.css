@@ -187,8 +187,8 @@ a {
 }
 
 .auth-shell .container.auth-container {
-  max-width: 560px;
-  padding-top: 68px;
+  max-width: 1120px;
+  padding-top: 52px;
 }
 
 .layout-main {
@@ -685,51 +685,58 @@ code {
   place-items: center;
 }
 
-.auth-landing {
-  align-items: stretch;
+.auth-stage {
+  width: min(100%, 1100px);
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 18px;
 }
 
-.auth-intro {
-  min-height: 100%;
+.auth-panel {
+  border-radius: 24px;
+  padding: 26px;
   display: grid;
   align-content: start;
   gap: 16px;
 }
 
-.auth-intro-clean {
-  backdrop-filter: saturate(140%) blur(12px);
-}
-
-.auth-feature-list {
+.auth-points {
   display: grid;
-  gap: 12px;
-}
-
-.auth-feature-list.compact {
   gap: 10px;
 }
 
-.auth-feature-item {
+.auth-point {
   display: grid;
   gap: 4px;
-  padding: 14px;
-  border-radius: 16px;
-  background: color-mix(in srgb, var(--surface-strong) 92%, transparent);
+  border-radius: 14px;
+  padding: 12px;
   border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-strong) 92%, transparent);
+}
+
+.auth-point strong {
+  font-size: 14px;
+}
+
+.auth-point span {
+  color: var(--text-sub);
+  font-size: 13px;
 }
 
 .auth-demo-grid {
   display: grid;
-  gap: 10px;
-  margin-top: 14px;
+  gap: 8px;
+  margin-top: 12px;
 }
 
 .demo-account-card {
-  display: grid;
-  gap: 6px;
-  padding: 14px;
-  border-radius: 16px;
-  background: color-mix(in srgb, var(--surface-strong) 92%, transparent);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface-strong) 94%, transparent);
   border: 1px solid var(--border);
 }
 
@@ -738,11 +745,12 @@ code {
   margin: 0 auto;
 }
 
-.auth-capsule {
-  border-radius: 28px;
-  backdrop-filter: saturate(180%) blur(18px);
-  background: color-mix(in srgb, var(--surface) 90%, transparent);
-  border: 1px solid color-mix(in srgb, var(--border-strong) 30%, var(--border));
+.auth-clean {
+  border-radius: 24px;
+  padding: 24px;
+  backdrop-filter: saturate(160%) blur(14px);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border-strong) 24%, var(--border));
 }
 
 .auth-tabs {
@@ -898,7 +906,8 @@ tbody tr.selected {
   .filters,
   .meta-grid,
   .record-grid,
-  .layout-main {
+  .layout-main,
+  .auth-stage {
     grid-template-columns: 1fr;
   }
 
@@ -920,6 +929,15 @@ tbody tr.selected {
 
   .content-area {
     padding-bottom: 10px;
+  }
+
+  .auth-shell .container.auth-container {
+    padding-top: 20px;
+  }
+
+  .demo-account-card {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .side-menu {
